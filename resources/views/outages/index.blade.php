@@ -7,6 +7,7 @@
     @vite('resources/css/app.css')
 </head>
 <body>
+
     <div class="md:px-52 md:py-8 p-4 mx-auto min-h-screen bg-gray-200">
         <div class="flex flex-col items-center space-x-3 justify-center mb-3">
             <h1 class="md:text-xl text-lg text-blue-500 font-semibold">Планирани прекини на струја</h1>

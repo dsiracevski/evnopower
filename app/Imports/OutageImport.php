@@ -3,11 +3,11 @@
 namespace App\Imports;
 
 use App\Models\Outage;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 
-class OutageImport implements ToModel, WithStartRow
+class OutageImport implements ToModel, WithStartRow, SkipsEmptyRows
 {
     /**
      * @param  array  $row
@@ -17,7 +17,6 @@ class OutageImport implements ToModel, WithStartRow
     public function model(array $row)
     {
 
-//        dd($row[2]);
         return new Outage([
             'start' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[0]),
             'end' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[1]),
