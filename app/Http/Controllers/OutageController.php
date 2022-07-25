@@ -14,12 +14,20 @@ class OutageController extends Controller
 
     public function index()
     {
+        $filter = (request()->filter) ?: "area";
+
         return view('outages.index', [
-            'outages' => Outage::all()
+            'outages' => Outage::all()->whereNotNull('area')->sortBy($filter)
         ]);
+
+        //TODO maybe add a cleanup method to get rid of empty rows?
     }
 
 
+    /**
+     * Import file for planned outages
+     * @return void
+     */
     public function importFile()
     {
         $url = "https://www.elektrodistribucija.mk/Grid/Planned-disconnections.aspx";

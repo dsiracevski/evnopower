@@ -17,12 +17,12 @@ class OutageImport implements ToModel, WithStartRow
     public function model(array $row)
     {
 
-//        dd($row);
+//        dd($row[2]);
         return new Outage([
             'start' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[0]),
             'end' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[1]),
-            'area' => $row['2'],
-            'address' => $row['3']
+            'area' => $row[2],
+            'address' => $row[3]
         ]);
     }
 

@@ -10,4 +10,8 @@ class Outage extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    protected $dates = ['start', 'end', 'created_at', 'updated_at'];
+
+    
 }
