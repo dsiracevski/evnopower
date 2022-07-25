@@ -17,10 +17,9 @@ class OutageController extends Controller
         $filter = (request()->filter) ?: "area";
 
         return view('outages.index', [
-            'outages' => Outage::all()->whereNotNull('area')->sortBy($filter)
+            'outages' => Outage::all()->sortBy($filter)
         ]);
 
-        //TODO maybe add a cleanup method to get rid of empty rows?
     }
 
 
