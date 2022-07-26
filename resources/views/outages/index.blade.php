@@ -1,14 +1,6 @@
-<!doctype html>
-<html lang="mk">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EVNoPower</title>
-    @vite('resources/css/app.css')
-</head>
-<body>
+<x-layout>
 
-    <div class="md:px-52 md:py-8 p-4 mx-auto min-h-screen bg-gray-200">
+    <div class="lg:px-24 px-6 md:py-8 p-4 mx-auto min-h-screen bg-white">
         <div class="flex flex-col items-center space-x-3 justify-center mb-3">
             <h1 class="md:text-xl text-lg text-blue-500 font-semibold">Планирани прекини на струја</h1>
             <div class="lowercase text-sm">
@@ -25,34 +17,51 @@
                 </form>
             </div>
         </div>
-        <div class="overflow-auto rounded-lg hidden md:block">
-            <table class="w-full">
-                <thead class="border-b-2 bg-gray-50 border-blue-200">
-                <tr>
-                    <th class="p-3 text-base font-semibold tracking-wide text-left">Дата:</th>
-                    <th class="p-3 text-base font-semibold tracking-wide text-left">Од:</th>
-                    <th class="p-3 text-base font-semibold tracking-wide text-left">До:</th>
-                    <th class="p-3 text-base font-semibold tracking-wide text-left">Област:</th>
-                    <th class="p-3 text-base font-semibold tracking-wide text-left">Адреса:</th>
-                </tr>
-                </thead>
-                <tbody class="divide-y-4 divide-gray-200 bg-white">
-                @foreach($outages as $outage)
-                    <tr>
-                        <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{date('Y-m-d', strtotime($outage->start))}}</td>
-                        <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{date('H:i:s', strtotime($outage->start))}}</td>
-                        <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{date('H:i:s', strtotime($outage->end))}}</td>
-                        <td class="p-3 text-sm text-gray-700 whitespace-nowrap">{{$outage->area}}</td>
-                        <td class="p-3 text-sm text-gray-700 md:whitespace-normal whitespace-nowrap w-max">{{$outage->address}}</td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
+        <div class="hidden md:block space-y-4">
+            <div class="grid grid-cols-12 gap-4 border-2 bg-amber-300 rounded-lg border-blue-50">
+                <div class="text-base col-span-1 col-span-1 p-4 rounded-lg font-semibold tracking-wide text-left">
+
+                    <x-filter-form>
+                        <input type="hidden" value="start" name="filter">
+                        <button type="submit">Од:</button>
+                    </x-filter-form>
+                </div>
+
+                <div class="text-base col-span-1 p-4 rounded-lg font-semibold tracking-wide text-left">
+                    <x-filter-form>
+                        <input type="hidden" value="end" name="filter">
+                        <button type="submit">
+                            До:
+                        </button>
+                    </x-filter-form>
+                </div>
+
+                <div class="text-base col-span-2 p-4 rounded-lg font-semibold tracking-wide text-left">
+                    <x-filter-form>
+                        <input type="hidden" value="area" name="filter">
+                        <button type="submit">
+                            Област:
+                        </button>
+                    </x-filter-form>
+                </div>
+
+                    <div class="text-base col-span-8 p-4 rounded-lg font-semibold tracking-wide text-left">Адреса:</div>
+            </div>
+
+            @foreach($outages as $outage)
+                <div class="grid grid-cols-12  rounded-lg shadow-lg hover:bg-amber-300 odd:bg-gray-100 even:bg-white border-2 border-blue-50">
+                    <div class="p-2 col-span-1 my-2 text-sm text-gray-700 text-left">{{date('H:i:s', strtotime($outage->start))}}</div>
+                    <div class="p-2 col-span-1 my-2 text-sm text-gray-700 text-left">{{date('H:i:s', strtotime($outage->end))}}</div>
+                    <div class="p-2 col-span-2 my-2 text-sm text-gray-700 text-left">{{$outage->area}}</div>
+                    <div class="p-2 col-span-8 my-2 text-sm text-gray-700 text-left  md:whitespace-normal">{{$outage->address}}</div>
+                </div>
+
+            @endforeach
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:hidden">
             @foreach($outages as $outage)
-                <div class="bg-white space-y-3 rounded-lg p-4">
+                <div class="col-span-1 shadow-xl border-2 border-blue-50 bg-white space-y-3 rounded-lg p-4">
                     <div class="flex items-center space-x-1">
                         <div class="text-sm text-blue-700">{{$outage->area}} -</div>
                         <div class="text-sm font-semibold text-black">{{date('Y-m-d', strtotime($outage->start))}}</div>
@@ -73,6 +82,6 @@
             @endforeach
         </div>
     </div>
+    </div>
 
-</body>
-</html>
+</x-layout>
