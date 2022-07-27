@@ -13,14 +13,15 @@ class OutageController extends Controller
 
     public function index()
     {
-        $areas = Outage::select('area')->distinct()->get();
+        $locations = Outage::locations()->get();
 
         $currentDate = (request()->date) ? Carbon::parse(request()->date)->endOfDay() : Carbon::today()->endOfDay();
 
         return view('outages.index', [
-            'outages' => Outage::filter()->orderBy((request()->filter) ?: "area")->get(),
+            'outages' => Outage::filter()->orderBy((request()->filter) ?: "location")->get(),
             'date' => date_format($currentDate, 'Y-m-d'),
-            'areas' => $areas
+            'locations' => $locations,
+            ''
         ]);
     }
 

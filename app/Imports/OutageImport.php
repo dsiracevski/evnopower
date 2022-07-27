@@ -21,7 +21,7 @@ class OutageImport implements ToModel, WithStartRow, SkipsEmptyRows
         return new Outage([
             'start' => Date::excelToDateTimeObject($row[0]),
             'end' => Date::excelToDateTimeObject($row[1]),
-            'area' => trim(preg_replace('/\d+/', '', $row[2])),
+            'location' => trim(preg_replace('/\d+/', '', $row[2])),
             'address' => $row[3]
         ]);
     }

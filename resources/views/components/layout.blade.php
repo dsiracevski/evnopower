@@ -7,10 +7,13 @@
     @vite('resources/css/app.css')
 </head>
 
-    <body>
+<body>
+    <div class="lg:px-24 px-6 md:py-8 p-4 mx-auto min-h-screen bg-white">
+
 
         {{$slot}}
 
-    </body>
+    </div>
+</body>
 
 </html>
