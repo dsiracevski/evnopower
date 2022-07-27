@@ -15,31 +15,27 @@ class Outage extends Model
 
     protected $dates = ['start', 'end', 'created_at', 'updated_at'];
 
-    protected $date;
+    protected $currentDate;
 
 
     public function scopeFilter($query)
     {
         $outage = self::latest('end')->first();
 
-        if ($outage->end <= now()) {
-            $this->date = Carbon::today()->endOfDay();
-        } else {
-            $this->date = Carbon::tomorrow()->endOfDay();
-        }
+        ($outage->end <= now()) ? $this->currentDate = Carbon::today()->endOfDay() : $this->currentDate = Carbon::tomorrow()->endOfDay();
 
-        if (request('date')) {
-            $endDate = (request()->date) ? Carbon::parse(request()->date)->endOfDay() : $this->date;
+        $endDate = (request()->date) ? Carbon::parse(request()->date)->endOfDay() : $this->currentDate;
 
-            $startDate = Carbon::parse($endDate)->startOfDay();
+        $startDate = Carbon::parse($endDate)->startOfDay();
 
-            return $query->whereBetween('start', [$startDate, $endDate]);
-        }
+        return $query->where('location', 'like', '%'.request()->location.'%')->whereBetween('start', [$startDate, $endDate]);
 
-        if (request('area')) {
-            return $query->where('area', 'like', '%'.request()->area.'%');
-        }
+        //TODO need to fix location filter, doesn't show entries other than today
+    }
 
+    public function scopeLocations($query)
+    {
+        $query->select('location')->distinct()->orderBy('location')->get();
     }
 
 }
