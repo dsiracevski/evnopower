@@ -4,22 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Imports\OutageImport;
 use App\Models\Outage;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
-
-use function PHPUnit\Framework\never;
 
 class OutageController extends Controller
 {
 
     public function index()
     {
-        $filter = (request()->filter) ?: "area";
+        $areas = Outage::select('area')->distinct()->get();
+
+        $currentDate = (request()->date) ? Carbon::parse(request()->date)->endOfDay() : Carbon::today()->endOfDay();
 
         return view('outages.index', [
-            'outages' => Outage::all()->sortBy($filter)
+            'outages' => Outage::filter()->orderBy((request()->filter) ?: "area")->get(),
+            'date' => date_format($currentDate, 'Y-m-d'),
+            'areas' => $areas
         ]);
-
     }
 
 
@@ -29,15 +31,18 @@ class OutageController extends Controller
      */
     public function importFile()
     {
+
         $url = "https://www.elektrodistribucija.mk/Grid/Planned-disconnections.aspx";
         preg_match('/Planirani-isklucuvanja-Samo-aktuelno(.*?).aspx/', file_get_contents($url), $match);
         $name = trim($match[1], '/');
         $fileUrl = "https://www.elektrodistribucija.mk/Files/Planirani-isklucuvanja-Samo-aktuelno/$name.aspx";
         $fileName = basename("$name.xlsx");
 
-        Storage::put("public/{$fileName}", file_get_contents($fileUrl));
+        Storage::disk('public')->exists($fileName) ? abort('404') : Storage::put("public/{$fileName}",
+            file_get_contents($fileUrl));
 
         Excel::import(new OutageImport, $fileName, 'public',
             \Maatwebsite\Excel\Excel::XLSX);
+
     }
 }

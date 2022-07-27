@@ -6,6 +6,7 @@ use App\Models\Outage;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class OutageImport implements ToModel, WithStartRow, SkipsEmptyRows
 {
@@ -18,9 +19,9 @@ class OutageImport implements ToModel, WithStartRow, SkipsEmptyRows
     {
 
         return new Outage([
-            'start' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[0]),
-            'end' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[1]),
-            'area' => $row[2],
+            'start' => Date::excelToDateTimeObject($row[0]),
+            'end' => Date::excelToDateTimeObject($row[1]),
+            'area' => trim(preg_replace('/\d+/', '', $row[2])),
             'address' => $row[3]
         ]);
     }
