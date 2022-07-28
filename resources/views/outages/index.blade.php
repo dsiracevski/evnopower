@@ -1,7 +1,6 @@
 <x-layout>
 
 
-{{--    @dd(auth()->user())--}}
     <div class="flex flex-col items-center space-y-3 justify-center mb-3">
         <h1 class="md:text-2xl text-lg text-center text-blue-500 font-semibold rounded-lg shadow-lg py-2 px-4">
             Планирани прекини на струја за <span class="text-amber-500">{{date('Y-m-d', strtotime($date))}}</span>
@@ -66,10 +65,10 @@
 
         @foreach($outages as $outage)
             <div class="grid grid-cols-12 rounded-lg shadow-lg hover:bg-amber-300 hover:text-lg odd:bg-gray-100 even:bg-white border-2 border-blue-50">
-                <div class="p-2 col-span-1 my-2 text-sm hover:text-lg hover:text-gray-900 text-gray-600 text-left">{{date('H:i:s', strtotime($outage->start))}}</div>
-                <div class="p-2 col-span-1 my-2 text-sm hover:text-lg hover:text-gray-900 text-gray-600 text-left">{{date('H:i:s', strtotime($outage->end))}}</div>
-                <div class="p-2 col-span-2 my-2 text-sm hover:text-lg hover:text-gray-900 text-gray-600 text-left">{{$outage->location}}</div>
-                <div class="p-2 col-span-8 my-2 text-sm hover:text-lg hover:text-gray-900 text-gray-600 text-left  md:whitespace-normal">{{$outage->address}}</div>
+                <div class="p-2 col-span-1 my-2 text-sm hover:font-bold hover:text-gray-900 text-gray-600 text-left">{{date('H:i:s', strtotime($outage->start))}}</div>
+                <div class="p-2 col-span-1 my-2 text-sm hover:font-bold hover:text-gray-900 text-gray-600 text-left">{{date('H:i:s', strtotime($outage->end))}}</div>
+                <div class="p-2 col-span-2 my-2 text-sm hover:font-bold hover:text-gray-900 text-gray-600 text-left">{{$outage->location}}</div>
+                <div class="p-2 col-span-8 my-2 text-sm hover:font-bold hover:text-gray-900 text-gray-600 text-left  md:whitespace-normal">{{$outage->address}}</div>
             </div>
 
         @endforeach

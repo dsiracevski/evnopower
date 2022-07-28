@@ -22,7 +22,7 @@ class Outage extends Model
     {
         $outage = self::latest('end')->first();
 
-        ($outage->end <= now()) ? $this->currentDate = Carbon::today()->endOfDay() : $this->currentDate = Carbon::tomorrow()->endOfDay();
+        ($outage->end >= now()) ? $this->currentDate = Carbon::today()->endOfDay() : $this->currentDate = Carbon::tomorrow()->endOfDay();
 
         $endDate = (request()->date) ? Carbon::parse(request()->date)->endOfDay() : $this->currentDate;
 
