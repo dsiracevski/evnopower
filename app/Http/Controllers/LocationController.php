@@ -11,7 +11,7 @@ class LocationController extends Controller
     {
         $locations = Location::all()->pluck('name')->toArray();
 
-        $outageLocations = Outage::locations()->pluck('location')->unique();
+        $outageLocations = Outage::locations()->pluck('location')->toArray();
 
         $outageLocations = array_diff($outageLocations, $locations);
 
