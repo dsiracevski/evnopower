@@ -13,17 +13,15 @@ class Welcome extends Mailable
 
     public $email;
 
-    public $locations;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($email, $locations)
+    public function __construct($email)
     {
         $this->email = $email;
-        $this->locations = $locations;
     }
 
     /**
