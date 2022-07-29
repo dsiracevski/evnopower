@@ -28,14 +28,24 @@ class Outage extends Model
 
         $startDate = Carbon::parse($endDate)->startOfDay();
 
-        return $query->where('location', 'like', '%'.request()->location.'%')->whereBetween('start', [$startDate, $endDate]);
-
+        return $query->where('location', 'like', '%'.request()->location.'%')->whereBetween('start',
+            [$startDate, $endDate]);
         //TODO need to fix location filter, doesn't show entries other than today
     }
 
     public function scopeLocations($query)
     {
         $query->select('location')->distinct()->orderBy('location')->get();
+    }
+
+    public function scopeUpcomingOutages()
+    {
+        return $this->where('start', '>=', now());
+    }
+
+    public function qualifier($locations)
+    {
+        return in_array($this->location, $locations, true);
     }
 
 }

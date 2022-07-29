@@ -11,8 +11,17 @@ class Location extends Model
 
     protected $guarded = [];
 
-    public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function users()
     {
         return $this->belongsToMany(User::class, 'location_user')->withTimestamps();
     }
+
+    public function scopeOutages($query)
+    {
+        $query->join('outages', function ($join) {
+            $join->on('locations.name', '=', 'outages.location')
+            ->where('outages.start', '>=', now());
+        });
+    }
+
 }

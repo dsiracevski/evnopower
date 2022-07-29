@@ -52,8 +52,13 @@ class User extends Authenticatable
         });
     }
 
-    public function locations(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function locations()
     {
-        return $this->belongsToMany(Location::class, 'location_user')->withTimestamps();
+        return $this->belongsToMany(Location::class, 'location_user')->withTimestamps()->withPivot('location_id');
+    }
+
+    public function scopeOutages()
+    {
+        return $this->locations()->outages()->get();
     }
 }

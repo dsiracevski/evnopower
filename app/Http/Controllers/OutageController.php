@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PlannedOutagesDocumentImported;
 use App\Imports\OutageImport;
+use App\Models\Location;
 use App\Models\Outage;
+use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
@@ -13,7 +16,7 @@ class OutageController extends Controller
 
     public function index()
     {
-        $locations = Outage::locations()->get();
+        $locations = Location::outages()->get();
 
         $currentDate = (request()->date) ? Carbon::parse(request()->date)->endOfDay() : Carbon::today()->endOfDay();
 
@@ -32,7 +35,6 @@ class OutageController extends Controller
      */
     public function importFile()
     {
-
         $url = "https://www.elektrodistribucija.mk/Grid/Planned-disconnections.aspx";
         preg_match('/Planirani-isklucuvanja-Samo-aktuelno(.*?).aspx/', file_get_contents($url), $match);
         $name = trim($match[1], '/');
@@ -42,8 +44,13 @@ class OutageController extends Controller
         Storage::disk('public')->exists($fileName) ? abort('404') : Storage::put("public/{$fileName}",
             file_get_contents($fileUrl));
 
-        Excel::import(new OutageImport, $fileName, 'public',
-            \Maatwebsite\Excel\Excel::XLSX);
+        $import = new OutageImport;
+        $import = Excel::import($import, $fileName, 'public',
+            \Maatwebsite\Excel\Excel::XLSX)->toArray($import, $fileName, 'public');
+
+        $locations = array_unique(array_column($import[0], 2));
+
+        PlannedOutagesDocumentImported::dispatch($locations);
 
     }
 }
