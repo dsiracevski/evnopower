@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\Welcome;
 use App\Models\Location;
+use App\Models\Outage;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -28,14 +29,19 @@ class NotificationController extends Controller
 
     public function setLocations()
     {
+
+//        dd(request()->all());
+
         $attribute = request()->validate([
-            'email' => 'required|email:rfc,dns',
+            'email' => 'required|email',
             'location' => 'required|array'
         ]);
 
-        $locations = Location::whereIn('id', $attribute['location'])->get();
+//        dd($locations = Location::whereIn('id', $attribute['location'])->get());
 
         $user = $this->getUser($attribute['email']);
+
+//        dd($user);
 
         try {
             $user->locations()->sync($attribute['location']);
@@ -49,8 +55,10 @@ class NotificationController extends Controller
     public function getUser($email)
     {
         $name = explode("@", $email);
+//        dd($name);
         $user = User::firstOrCreate(['email' => $email],
             ['name' => $name[0], 'password' => Hash::make($name[0])]);
+
         Auth::login($user);
 
         return $user;
