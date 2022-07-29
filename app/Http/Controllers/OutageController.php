@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\PlannedOutagesDocumentImported;
 use App\Imports\OutageImport;
-use App\Models\Location;
 use App\Models\Outage;
-use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
@@ -16,7 +14,7 @@ class OutageController extends Controller
 
     public function index()
     {
-        $locations = Location::outages()->get();
+        $locations = Outage::locations()->get();
 
         $currentDate = (request()->date) ? Carbon::parse(request()->date)->endOfDay() : Carbon::today()->endOfDay();
 
