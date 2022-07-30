@@ -2,12 +2,12 @@
 
 namespace App\Jobs;
 
+use App\Services\NotifyUsersAboutNewOutages;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Artisan;
 
 class SendPlannedOutagesMail implements ShouldQueue
 {
@@ -32,9 +32,6 @@ class SendPlannedOutagesMail implements ShouldQueue
      */
     public function handle()
     {
-//        dd($this->data);
-
-        Artisan::call('users:send-planned-outage-mail', ['locations' => $this->data]);
-
+        (new NotifyUsersAboutNewOutages())->handle();
     }
 }

@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\PlannedOutagesDocumentImported;
 use App\Imports\OutageImport;
+use App\Jobs\SendPlannedOutagesMail;
 use App\Models\Outage;
+use App\Services\DownloadOutagesDocument;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
@@ -33,22 +34,13 @@ class OutageController extends Controller
      */
     public function importFile()
     {
-        $url = "https://www.elektrodistribucija.mk/Grid/Planned-disconnections.aspx";
-        preg_match('/Planirani-isklucuvanja-Samo-aktuelno(.*?).aspx/', file_get_contents($url), $match);
-        $name = trim($match[1], '/');
-        $fileUrl = "https://www.elektrodistribucija.mk/Files/Planirani-isklucuvanja-Samo-aktuelno/$name.aspx";
-        $fileName = basename("$name.xlsx");
+        try {
+            $locations = (new DownloadOutagesDocument())->handle();
+        } catch (\Exception $e) {
+            // you can redirect, send email etc...
+            return;
+        }
 
-        Storage::disk('public')->exists($fileName) ? abort('404') : Storage::put("public/{$fileName}",
-            file_get_contents($fileUrl));
-
-        $import = new OutageImport;
-        $import = Excel::import($import, $fileName, 'public',
-            \Maatwebsite\Excel\Excel::XLSX)->toArray($import, $fileName, 'public');
-
-        $locations = array_unique(array_column($import[0], 2));
-
-        PlannedOutagesDocumentImported::dispatch($locations);
-
+        SendPlannedOutagesMail::dispatch($locations);
     }
 }

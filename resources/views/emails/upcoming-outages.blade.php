@@ -3,7 +3,7 @@
 
 Добар ден. Ја добивате оваа порака бидејќи има планирани прекини на струја за:
 
-@foreach($plannedOutages as $outage)
+@foreach($outages as $outage)
     - {{$outage->location}}
     - {{$outage->start}}
     - {{$outage->end}}
