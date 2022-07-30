@@ -25,8 +25,6 @@ class SendOutageNotification
      */
     public function handle(PlannedOutagesDocumentImported $event)
     {
-
         SendPlannedOutagesMail::dispatch($event->locations);
     }
-
 }

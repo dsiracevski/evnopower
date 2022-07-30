@@ -9,7 +9,7 @@ class PlannedOutagesDocumentImported
 {
     use Dispatchable, SerializesModels;
 
-public $locations;
+    public $locations;
 
     /**
      * Create a new event instance.

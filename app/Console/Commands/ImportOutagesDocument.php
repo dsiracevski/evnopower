@@ -5,18 +5,19 @@ namespace App\Console\Commands;
 use App\Mail\PlannedOutages;
 use App\Models\Outage;
 use App\Models\User;
+use App\Services\DownloadOutagesDocument;
 use App\Services\NotifyUsersAboutNewOutages;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 
-class SendPlannedOutagesMail extends Command
+class ImportOutagesDocument extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'users:send-planned-outage-mail {locations*}';
+    protected $signature = 'outages:import';
 
     /**
      * The console command description.
@@ -32,7 +33,11 @@ class SendPlannedOutagesMail extends Command
      */
     public function handle()
     {
-        (new NotifyUsersAboutNewOutages())->handle();
+        try {
+            (new DownloadOutagesDocument())->handle();
+        } catch (\Exception $e) {
+            // Log something
+        }
 
         return 0;
     }
