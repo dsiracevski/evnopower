@@ -2,31 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Imports\OutageImport;
 use App\Jobs\SendPlannedOutagesMail;
 use App\Models\Outage;
 use App\Services\DownloadOutagesDocument;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Storage;
-use Maatwebsite\Excel\Facades\Excel;
 
 class OutageController extends Controller
 {
-
     public function index()
     {
         $locations = Outage::locations()->get();
 
-        $currentDate = (request()->date) ? Carbon::parse(request()->date)->endOfDay() : Carbon::today()->endOfDay();
+        $currentDate = (request()->date)
+            ? Carbon::parse(request()->date)->endOfDay()
+            : Carbon::today()->endOfDay();
 
         return view('outages.index', [
             'outages' => Outage::filter()->orderBy((request()->filter) ?: "location")->get(),
             'date' => date_format($currentDate, 'Y-m-d'),
-            'locations' => $locations,
-            ''
+            'locations' => $locations
         ]);
     }
-
 
     /**
      * Import file for planned outages
@@ -37,8 +33,7 @@ class OutageController extends Controller
         try {
             $locations = (new DownloadOutagesDocument())->handle();
         } catch (\Exception $e) {
-            // you can redirect, send email etc...
-            return;
+//            dd("Something happened");
         }
 
         SendPlannedOutagesMail::dispatch($locations);
