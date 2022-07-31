@@ -19,10 +19,11 @@ class DownloadOutagesDocument
         $fileName = $this->getFileName();
         $fileName .= ".xlsx";
 
-//        dd($fileName);
+        //Check if file has been downloaded yet
         if (Storage::exists("public/{$fileName}")) {
-            return "It's here already!";
+            return 0;
         }
+
         Storage::put("public/{$fileName}", file_get_contents($this->fileUrl));
 
         $import = new OutageImport;
@@ -32,6 +33,10 @@ class DownloadOutagesDocument
         return array_unique(array_column($import[0], 2));
     }
 
+    /**
+     * The document name is the md5 hash of the file contents, in case of an unscheduled update
+     * @return string
+     */
     private function getFileName()
     {
         $url = "https://www.elektrodistribucija.mk/Grid/Planned-disconnections.aspx";

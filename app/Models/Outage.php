@@ -48,14 +48,16 @@ class Outage extends Model
         return $this->where('start', '>=', now());
     }
 
+    // Check if there are any planned outages for the user-supplied locations
     public function qualifier($locations)
     {
         return in_array($this->location, $locations, true);
     }
 
+    // Check if there are any planned outages the user hasn't received a notification for yet
     public function notSentToUser($user)
     {
-     return (!$this->users->contains($user->id));
+     return !$this->users->contains($user->id);
     }
 
 }
