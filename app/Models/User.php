@@ -57,6 +57,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Location::class, 'location_user')->withTimestamps()->withPivot('location_id');
     }
 
+    public function outages()
+    {
+        return $this->belongsToMany(Outage::class, 'user_outages');
+    }
+
     public function scopeOutages()
     {
         return $this->locations()->outages()->get();

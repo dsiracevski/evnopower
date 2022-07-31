@@ -18,6 +18,11 @@ class Outage extends Model
     protected $currentDate;
 
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_outages');
+    }
+
     public function scopeFilter($query)
     {
         $outage = self::latest('end')->first();
@@ -46,6 +51,11 @@ class Outage extends Model
     public function qualifier($locations)
     {
         return in_array($this->location, $locations, true);
+    }
+
+    public function notSentToUser($user)
+    {
+     return (!$this->users->contains($user->id));
     }
 
 }
