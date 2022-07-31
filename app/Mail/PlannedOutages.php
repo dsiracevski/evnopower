@@ -22,11 +22,14 @@ class PlannedOutages extends Mailable
      */
     public function __construct($plannedOutages, $user)
     {
+        // Get ONLY the outages for which the user hasn't received a notification for
         $this->outages = $plannedOutages->filter(function ($outage) {
             return $outage->notSentToUser($this->user);
         });
+
         $this->user = $user;
 
+        // Add them to the list
         foreach ($this->outages as $outage) {
             $user->outages()->attach($outage->id);
         }

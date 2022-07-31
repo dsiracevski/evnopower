@@ -36,6 +36,7 @@ class OutageController extends Controller
 //            dd("Something happened");
         }
 
+        // Dispatch job for mail processing
         SendPlannedOutagesMail::dispatch($locations);
     }
 }

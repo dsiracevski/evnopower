@@ -11,18 +11,22 @@ class NotifyUsersAboutNewOutages
 {
     public function handle()
     {
+        // Get all planned outages
         $plannedOutages = Outage::upcomingOutages()->get();
 
+        // Get all users that have subscribed for notifications
         $usersWithLocations = User::has('locations')->with('locations')->get();
 
         foreach ($usersWithLocations as $user) {
 
             $uLocations = $user->locations()->pluck('name');
 
+            // Checks for and returns all planned outages for the cities the user has subscribed for
             $plannedOutages = $plannedOutages->filter(function ($outage) use ($uLocations) {
                 return $outage->qualifier($uLocations->toArray());
             });
 
+            // Send them to for processing
             Mail::to($user->email)->send(new PlannedOutages($plannedOutages, $user));
         }
     }
