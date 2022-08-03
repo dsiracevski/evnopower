@@ -6,7 +6,6 @@ use App\Jobs\SendPlannedOutagesMail;
 use App\Models\Outage;
 use App\Services\DownloadOutagesDocument;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class OutageController extends Controller
 {
@@ -34,7 +33,7 @@ class OutageController extends Controller
         try {
             $locations = (new DownloadOutagesDocument())->handle();
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+//            dd("Something happened");
         }
 
         // Dispatch job for mail processing
