@@ -4,10 +4,10 @@
 Добар ден. Ја добивате оваа порака бидејќи има планирани прекини на струја за:
 
 @foreach($outages as $outage)
-    - {{$outage->location}}
-    - {{$outage->start}}
-    - {{$outage->end}}
-    - {{$outage->address}}
+    -КЕЦ: {{$outage->location}}
+    -Почнува: {{$outage->start}}
+    -Завршува: {{$outage->end}}
+    -Локации: {{$outage->address}}
 
 @endforeach
 

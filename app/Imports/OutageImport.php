@@ -21,8 +21,9 @@ class OutageImport implements ToModel, WithStartRow, SkipsEmptyRows
         $outageExists = Outage::where(function ($query) use ($row) {
             $query->where('start', '=', Date::excelToDateTimeObject($row[0]));
             $query->where('end', '=', Date::excelToDateTimeObject($row[1]));
-            $query->where('location', '=', $row[2]);
-            $query->where('address', '=', $row[3]);
+            $query->where('cec_number', '=', trim(preg_replace('/\D/', '', $row[3])));
+            $query->where('location', '=', trim(preg_replace('/\d+/', '', $row[3])));
+            $query->where('address', '=', $row[4]);
         })->exists();
 
         // If it doesn't exist, save the record
@@ -30,8 +31,9 @@ class OutageImport implements ToModel, WithStartRow, SkipsEmptyRows
             return new Outage([
                 'start' => Date::excelToDateTimeObject($row[0]),
                 'end' => Date::excelToDateTimeObject($row[1]),
-                'location' => trim(preg_replace('/\d+/', '', $row[2])),
-                'address' => $row[3]
+                'cec_number' => trim(preg_replace('/\D/', '', $row[3])),
+                'location' => trim(preg_replace('/\d+/', '', $row[3])),
+                'address' => $row[4]
             ]);
         }
     }
