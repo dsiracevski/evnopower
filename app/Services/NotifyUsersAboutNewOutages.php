@@ -15,7 +15,6 @@ class NotifyUsersAboutNewOutages
         // Get all planned outages
         $plannedOutages = Outage::upcomingOutages()->get();
 
-
         if ($plannedOutages->isNotEmpty()) {
             // Get all users that have subscribed for notifications
             $usersWithLocations = User::has('locations')->with('locations')->get();
@@ -41,6 +40,5 @@ class NotifyUsersAboutNewOutages
                 }
             }
         }
-        
     }
 }

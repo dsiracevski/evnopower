@@ -43,16 +43,7 @@ class Outage extends Model
         $query->select('location')->distinct()->orderBy('location')->get();
     }
 
-    public function userOutages()
-    {
-        $userLocations = auth()->user()->locations()->pluck('name');
-
-        return $this->filter(function ($outage) use ($userLocations) {
-            return $outage->subscribedLocations($userLocations->toArray());
-        });
-    }
-
-    public function upcomingOutages()
+    public function scopeUpcomingOutages()
     {
         return $this->where(function ($query) {
             $query->where('start', '>=', now());
@@ -61,7 +52,7 @@ class Outage extends Model
     }
 
     // Check if there are any planned outages for the user-supplied locations
-    public function subscribedLocations($locations)
+    public function qualifier($locations)
     {
         return in_array($this->location, $locations, true);
     }
