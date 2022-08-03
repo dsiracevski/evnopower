@@ -20,7 +20,7 @@ class Outage extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'user_outages');
+        return $this->belongsToMany(User::class, 'user_outages')->withTimestamps();
     }
 
     public function scopeFilter($query)
@@ -54,7 +54,10 @@ class Outage extends Model
 
     public function upcomingOutages()
     {
-        return $this->where('start', '>=', now());
+        return $this->where(function ($query) {
+            $query->where('start', '>=', now());
+            $query->where('end', '<=', today()->endOfDay());
+        });
     }
 
     // Check if there are any planned outages for the user-supplied locations
@@ -66,7 +69,7 @@ class Outage extends Model
     // Check if there are any planned outages the user hasn't received a notification for yet
     public function notSentToUser($user)
     {
-     return !$this->users->contains($user->id);
+        return !$this->users->contains($user->id);
     }
 
 }
