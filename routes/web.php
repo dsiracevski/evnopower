@@ -9,19 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/sync-locations', [LocationController::class, 'syncLocations'])->name('location.sync-locations');
 Route::get('/notifications', [NotificationController::class, 'chooseLocations'])->name('notification.choose-locations');
 Route::post('/notifications', [NotificationController::class, 'setLocations'])->name('notification.set-locations');
-Route::get('/get', [OutageController::class, 'importFile'])->name('outage.import-file');
-Route::get('/', [OutageController::class, 'index'])->name('outage.index');
-
-Route::get('/aaa', function () {
-
-    $locations = \App\Models\Outage::all()->pluck('location')->toArray();
-
-    SendPlannedOutagesMail::dispatch($locations);
-
-});
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::get('/get', [OutageController::class, 'importFile'])->name('outages.import-file')->middleware('auth');
+Route::get('/', [OutageController::class, 'index'])->name('outages.index');
 
 require __DIR__.'/auth.php';

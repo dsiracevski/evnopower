@@ -19,11 +19,11 @@ class NotifyUsersAboutNewOutages
 
         foreach ($usersWithLocations as $user) {
 
-            $uLocations = $user->locations()->pluck('name');
+            $userLocations = $user->locations()->pluck('name');
 
             // Checks for and returns all planned outages for the cities the user has subscribed for
-            $plannedOutages = $plannedOutages->filter(function ($outage) use ($uLocations) {
-                return $outage->qualifier($uLocations->toArray());
+            $plannedOutages = $plannedOutages->filter(function ($outage) use ($userLocations) {
+                return $outage->subscribedLocations($userLocations->toArray());
             });
 
             // Send them to for processing
