@@ -59,7 +59,7 @@ class User extends Authenticatable
 
     public function outages()
     {
-        return $this->belongsToMany(Outage::class, 'user_outages')->withTimestamps();
+        return $this->belongsToMany(Outage::class, 'user_outages');
     }
 
     public function scopeOutages()
