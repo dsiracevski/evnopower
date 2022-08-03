@@ -1,4 +1,4 @@
-<form action="{{route('outages.index')}}" method="GET">
+<form action="{{route('outage.index')}}" method="GET">
     @csrf
 
     {{$slot}}
