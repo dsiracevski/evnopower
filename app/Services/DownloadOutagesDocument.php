@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Imports\OutageImport;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -21,7 +21,7 @@ class DownloadOutagesDocument
 
         //Check if file has been downloaded yet
         if (Storage::exists("public/{$fileName}")) {
-            return 0;
+            Log::info("The file has not been updated yet!");
         }
 
         Storage::put("public/{$fileName}", file_get_contents($this->fileUrl));

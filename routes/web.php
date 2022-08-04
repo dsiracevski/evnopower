@@ -12,16 +12,4 @@ Route::post('/notifications', [NotificationController::class, 'setLocations'])->
 Route::get('/get', [OutageController::class, 'importFile'])->name('outage.import-file');
 Route::get('/', [OutageController::class, 'index'])->name('outage.index');
 
-Route::get('/aaa', function () {
-
-    $locations = \App\Models\Outage::all()->pluck('location')->toArray();
-
-    SendPlannedOutagesMail::dispatch($locations);
-
-});
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
-
 require __DIR__.'/auth.php';

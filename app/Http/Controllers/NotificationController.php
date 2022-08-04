@@ -23,10 +23,20 @@ class NotificationController extends Controller
 
     public function setLocations()
     {
-        $attribute = request()->validate([
-            'email' => 'required|email',
-            'location' => 'required|array'
-        ]);
+        //TODO add condition and logic for cases where users add their own location
+//        if (!request()->has('newLocation')) {
+            $attribute = request()->validate([
+                'email' => 'required|email',
+                'location' => 'required|array'
+            ]);
+//        } else {
+//            $attribute = request()->validate([
+//                'email' => 'required|email',
+//                'location' => 'array',
+//                'newLocation' => 'required'
+//            ]);
+//        }
+
 
         $user = $this->getUser($attribute['email']);
 

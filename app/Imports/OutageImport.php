@@ -17,12 +17,14 @@ class OutageImport implements ToModel, WithStartRow, SkipsEmptyRows
      */
     public function model(array $row)
     {
+//        dd($row);
         // Check if a record already exists, return true or false
         $outageExists = Outage::where(function ($query) use ($row) {
             $query->where('start', '=', Date::excelToDateTimeObject($row[0]));
             $query->where('end', '=', Date::excelToDateTimeObject($row[1]));
-            $query->where('location', '=', $row[2]);
-            $query->where('address', '=', $row[3]);
+//            $query->where('cec_number', '=', trim(preg_replace('/[^0-9]/', '', $row[3]))); // Uncomment if EVN decide to change the file format again
+            $query->where('location', '=', trim(preg_replace('/\d+/', '', $row[2]))); // 3
+            $query->where('address', '=', $row[3]); // 4
         })->exists();
 
         // If it doesn't exist, save the record
@@ -30,8 +32,9 @@ class OutageImport implements ToModel, WithStartRow, SkipsEmptyRows
             return new Outage([
                 'start' => Date::excelToDateTimeObject($row[0]),
                 'end' => Date::excelToDateTimeObject($row[1]),
-                'location' => trim(preg_replace('/\d+/', '', $row[2])),
-                'address' => $row[3]
+//                'cec_number' => trim(preg_replace('/[^0-9]/', '', $row[3])), // Uncomment if EVN decide to change the file format again
+                'location' => trim(preg_replace('/\d+/', '', $row[2])), // 3
+                'address' => $row[3] // 4
             ]);
         }
     }

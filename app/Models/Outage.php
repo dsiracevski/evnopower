@@ -57,7 +57,7 @@ class Outage extends Model
     // Check if there are any planned outages the user hasn't received a notification for yet
     public function notSentToUser($user)
     {
-     return !$this->users->contains($user->id);
+        return (!$this->users->contains($user));
     }
 
 }
