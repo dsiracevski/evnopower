@@ -5,36 +5,31 @@ namespace App\Http\Controllers;
 use App\Jobs\SendPlannedOutagesMail;
 use App\Models\Outage;
 use App\Services\DownloadOutagesDocument;
-use Illuminate\Support\Carbon;
+use App\Services\OutageService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class OutageController extends Controller
 {
+    protected OutageService $outageService;
+
+    public function __construct(OutageService $outageService)
+    {
+        $this->outageService = $outageService;
+    }
+
     public function index()
     {
-        $locations = Outage::locations()->get();
+        $date = Carbon::parse(request('date')) ?: today();
+        $location = request()->location ?: '';
 
-        $currentDate = (request()->date)
-            ? Carbon::parse(request()->date)->endOfDay()
-            : Carbon::today()->endOfDay();
+        $locations = Outage::select('location')->distinct()->orderBy('location')->get();
 
-        $plannedOutages = Outage::filter()->where('start', '>=', today())
-            ->orderBy((request()->filter) ?: "location")
-            ->get();
-
-
-        //TODO refactor in EVNoPower 2.0 (isset with optional route parameter?)
-        if (request()->user_id) {
-            $userLocations = auth()->user()->locations()->pluck('name');
-
-            $plannedOutages = $plannedOutages->filter(function ($outage) use ($userLocations) {
-                return $outage->subscribedLocations($userLocations->toArray());
-            });
-        }
+        $plannedOutages = Outage::for($location)->betweenDates($date)->get();
 
         return view('outages.index', [
             'outages' => $plannedOutages,
-            'date' => date_format($currentDate, 'Y-m-d'),
+            'date' => date_format($date, 'Y-m-d'),
             'locations' => $locations
         ]);
     }
@@ -47,14 +42,11 @@ class OutageController extends Controller
     {
         try {
             $locations = (new DownloadOutagesDocument())->handle();
-
-
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
 
         // Dispatch job for mail processing
         SendPlannedOutagesMail::dispatch($locations);
-
     }
 }

@@ -20,11 +20,11 @@ class DownloadOutagesDocument
         $fileName .= ".xlsx";
 
         //Check if file has been downloaded yet
-        if (Storage::exists("public/{$fileName}")) {
+        if (Storage::exists("public/$fileName")) {
             Log::info("The file has not been updated yet!");
         }
 
-        Storage::put("public/{$fileName}", file_get_contents($this->fileUrl));
+        Storage::put("public/$fileName", file_get_contents($this->fileUrl));
 
         $import = new OutageImport;
         $import = Excel::import($import, $fileName, 'public', \Maatwebsite\Excel\Excel::XLSX)
@@ -37,7 +37,7 @@ class DownloadOutagesDocument
      * The document name is the md5 hash of the file contents, in case of an unscheduled update
      * @return string
      */
-    private function getFileName()
+    private function getFileName(): string
     {
         $url = "https://www.elektrodistribucija.mk/Grid/Planned-disconnections.aspx";
         preg_match('/Planirani-isklucuvanja-Samo-aktuelno(.*?).aspx/', file_get_contents($url), $match);
