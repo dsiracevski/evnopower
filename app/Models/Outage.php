@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-//use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 
 class Outage extends Model
@@ -18,29 +18,36 @@ class Outage extends Model
     protected $currentDate;
 
 
-    public function users()
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_outages');
     }
 
-    public function scopeFilter($query)
+    /**
+     * @param $query
+     * @param $date
+     * @return mixed
+     */
+    public function scopeBetweenDates($query, $date): mixed
     {
-        $outage = self::latest('end')->first();
+        $startDate = Carbon::parse($date)->subDay()->endOfDay();
+        $endDate = Carbon::parse($date)->endOfDay();
 
-        (isset($outage->end) >= now()) ? $this->currentDate = Carbon::today()->endOfDay() : $this->currentDate = Carbon::tomorrow()->endOfDay();
-
-        $endDate = (request()->date) ? Carbon::parse(request()->date)->endOfDay() : $this->currentDate;
-
-        $startDate = Carbon::parse($endDate)->startOfDay();
-
-        return $query->where('location', 'like', '%'.request()->location.'%')->whereBetween('start',
-            [$startDate, $endDate]);
-        //TODO need to fix location filter, doesn't show entries other than today
+        return $query->where(function ($query) use ($startDate, $endDate) {
+            $query->where('start', '>=', $startDate)
+                ->where('end', '<=', $endDate);
+        });
     }
 
-    public function scopeLocations($query)
+    /**
+     * @param $query
+     * @param $location
+     */
+    public function scopeFor($query, $location): void
     {
-        $query->select('location')->distinct()->orderBy('location')->get();
+        $query->when($location ?? false, function ($query, $location) {
+            $query->where('location', 'LIKE', '%'.$location.'%');
+        });
     }
 
     public function scopeUpcomingOutages()
@@ -48,16 +55,23 @@ class Outage extends Model
         return $this->where('start', '>=', now());
     }
 
-    // Check if there are any planned outages for the user-supplied locations
-    public function qualifier($locations)
+    /**
+     * @param $locations
+     * @return bool
+     */
+    public function qualifier($locations): bool
     {
-        return in_array($this->location, $locations, true);
+        return in_array($this->location, $locations,
+            true); // Check if there are any planned outages for the user-supplied locations
     }
 
-    // Check if there are any planned outages the user hasn't received a notification for yet
-    public function notSentToUser($user)
+    /**
+     * @param $user
+     * @return bool
+     */
+    public function notSentToUser($user): bool
     {
-        return (!$this->users->contains($user));
+        return (!$this->users->contains($user)); // Check if there are any planned outages the user hasn't received a notification for yet
     }
 
 }

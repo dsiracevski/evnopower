@@ -18,7 +18,6 @@ class OutageImport implements ToModel, WithStartRow, SkipsEmptyRows
         return $this->import($row);
     }
 
-// TODO extract to service class
     public function formatted(array $row): array
     {
         if (!isset($row[4])) {

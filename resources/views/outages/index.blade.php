@@ -1,8 +1,8 @@
 <x-layout>
-
     <div class="flex flex-col items-center space-y-3 justify-center mb-3">
         <h1 class="md:text-2xl text-lg text-center text-blue-500 font-semibold rounded-lg shadow-lg py-2 px-4 hover:bg-blue-300">
-            <a href="{{route('outage.index')}}">Планирани прекини на струја за <span class="text-amber-500">{{date('Y-m-d', strtotime($date))}}</span>
+            <a href="{{route('outage.index')}}">Планирани прекини на струја за <span
+                        class="text-amber-500">{{date('Y-m-d', strtotime($date))}}</span>
             </a>
         </h1>
 
@@ -13,22 +13,17 @@
                 <label for="date" class="bg-amber-300 py-1 px-3 rounded-lg border-2 border-amber-400">Дата:</label>
                 <input value="{{$date}}" id="date" name="date" class="border-2 border-amber-400 rounded-lg p-1 text-sm"
                        onchange="this.form.submit()" type="date">
-            </x-filter-form>
-
-            <x-filter-form>
 
                 <label for="area" class="bg-amber-300 py-1 px-3 rounded-lg border-2 border-amber-400">Локација:</label>
                 <select id="area" name="location" onchange="this.form.submit()"
                         class="border-2 border-amber-400 bg-white rounded-lg p-1 text-sm">
                     <option value="">сите локации</option>
-
                     @foreach($locations as $location)
-
                         <option {{(request()->get('location') === $location->location) ? 'selected' : ''}} value="{{$location->location}}">{{$location->location}}</option>
-
                     @endforeach
                 </select>
             </x-filter-form>
+
             <div class="flex space-x-1 place-content-around md:text-sm text-xs">
                 <div class="bg-white py-1 px-1 rounded-lg border-2 border-green-400 text-center">
                     <a href="{{route('notification.choose-locations')}}">Нотификации</a>
