@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Location;
-use App\Models\Outage;
+use App\Services\OutageService;
 
 class LocationController extends Controller
 {
-    public function syncLocations()
+    public function __construct(private OutageService $outageService)
+    {
+    }
+
+    public function syncLocations(): void
     {
         $locations = Location::all()->pluck('name')->toArray();
 
-        $outageLocations = Outage::locations()->pluck('location')->toArray();
+        $outageLocations = $this->outageService->getLocationNames()->pluck('location')->toArray();
 
         $outageLocations = array_diff($outageLocations, $locations);
 

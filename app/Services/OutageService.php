@@ -14,4 +14,9 @@ class OutageService
     {
         $this->outage = $outage;
     }
+
+    public function getLocationNames()
+    {
+        return $this->outage->select('location')->distinct()->orderBy('location')->get();
+    }
 }
