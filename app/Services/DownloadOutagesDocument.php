@@ -9,7 +9,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class DownloadOutagesDocument
 {
-    protected $fileUrl;
+    protected string $fileUrl;
 
     /**
      * @return array
@@ -22,6 +22,7 @@ class DownloadOutagesDocument
         //Check if file has been downloaded yet
         if (Storage::exists("public/$fileName")) {
             Log::info("The file has not been updated yet!");
+            abort(404);
         }
 
         Storage::put("public/$fileName", file_get_contents($this->fileUrl));

@@ -16,8 +16,12 @@ return new class extends Migration
         Schema::create('outages', function (Blueprint $table) {
             $table->id();
             $table->dateTime('start');
+            $table->index('start');
             $table->dateTime('end');
-            $table->string('area');
+            $table->index('end');
+            $table->integer('cec_number')->nullable();
+            $table->string('location');
+            $table->index('location');
             $table->text('address');
             $table->timestamps();
         });

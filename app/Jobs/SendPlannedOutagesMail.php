@@ -30,7 +30,7 @@ class SendPlannedOutagesMail implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         (new NotifyUsersAboutNewOutages())->handle();
     }

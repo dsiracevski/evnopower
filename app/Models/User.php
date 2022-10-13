@@ -5,10 +5,12 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Mail\Welcome;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Mail;
 use Laravel\Sanctum\HasApiTokens;
+use Ramsey\Collection\Collection;
 
 class User extends Authenticatable
 {
@@ -52,17 +54,17 @@ class User extends Authenticatable
         });
     }
 
-    public function locations()
+    public function locations(): BelongsToMany
     {
         return $this->belongsToMany(Location::class, 'location_user')->withTimestamps()->withPivot('location_id');
     }
 
-    public function outages()
+    public function outages(): BelongsToMany
     {
-        return $this->belongsToMany(Outage::class, 'user_outages');
+        return $this->belongsToMany(Outage::class, 'user_outages')->withTimestamps();
     }
 
-    public function scopeOutages()
+    public function scopeOutages(): Location|Collection
     {
         return $this->locations()->outages()->get();
     }
