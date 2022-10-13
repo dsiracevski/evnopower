@@ -57,7 +57,7 @@
                             </div>
 
                             <div class="py-1 px-4 w-max my-4 shadow-xl rounded-xl bg-red-500">
-                                <a href="{{url()->previous()}}" class="text-white">Назад</a>
+                                <a href="{{route('outage.index')}}" class="text-white">Назад</a>
                             </div>
                         </div>
                 </div>

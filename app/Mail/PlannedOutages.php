@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Outage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -20,19 +21,12 @@ class PlannedOutages extends Mailable
      *
      * @return void
      */
-    public function __construct($plannedOutages, $user)
+    public function __construct($userOutages, $user)
     {
-        // Get ONLY the outages for which the user hasn't received a notification for
-        $this->outages = $plannedOutages->filter(function ($outage) {
-            return $outage->notSentToUser($this->user);
-        });
-
+        $this->outages = $userOutages->whereIn('location', $user->locations()->pluck('name'));
         $this->user = $user;
-
-        // Add them to the list
-        foreach ($this->outages as $outage) {
-            $user->outages()->attach($outage->id);
-        }
+        // Add them to the list{
+            $this->user->outages()->attach($userOutages);
     }
 
     /**

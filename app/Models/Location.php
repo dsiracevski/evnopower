@@ -16,11 +16,15 @@ class Location extends Model
         return $this->belongsToMany(User::class, 'location_user')->withTimestamps();
     }
 
-    public function scopeOutages($query)
+    /**
+     * Get outages for
+     * @param $query
+     */
+    public function scopeOutages($query): void
     {
         $query->join('outages', function ($join) {
             $join->on('locations.name', '=', 'outages.location')
-            ->where('outages.start', '>=', now());
+                ->where('outages.start', '>=', now());
         });
     }
 

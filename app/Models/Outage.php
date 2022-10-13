@@ -20,7 +20,7 @@ class Outage extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'user_outages');
+        return $this->belongsToMany(User::class, 'user_outages')->withTimestamps();
     }
 
     /**
@@ -52,17 +52,7 @@ class Outage extends Model
 
     public function scopeUpcomingOutages()
     {
-        return $this->where('start', '>=', now());
-    }
-
-    /**
-     * @param $locations
-     * @return bool
-     */
-    public function qualifier($locations): bool
-    {
-        return in_array($this->location, $locations,
-            true); // Check if there are any planned outages for the user-supplied locations
+        return $this->where('start', '>=', now()->toDateTimeString());
     }
 
     /**

@@ -14,18 +14,15 @@ class DatabaseSeeder extends Seeder
 
     public function run()
     {
-
-        User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@evnopower.com',
-            'password' => Hash::make('123')
+        $this->call([
+            LocationSeeder::class
         ]);
 
-        $locations = ['Скопје Аеродром', 'Тетово', 'Куманово', 'Штип', 'Делчево'];
-
-        foreach ($locations as $location) {
-            Location::factory()->create(['name' => $location]);
-        }
+        User::factory()->create([
+        'name' => 'Admin',
+        'email' => 'admin@evnopower.com',
+        'password' => Hash::make('123')
+    ]);
 
         $user = User::first();
 

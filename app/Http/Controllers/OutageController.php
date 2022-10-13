@@ -7,6 +7,7 @@ use App\Models\Outage;
 use App\Services\DownloadOutagesDocument;
 use App\Services\OutageService;
 use Carbon\Carbon;
+use Illuminate\Support\Benchmark;
 use Illuminate\Support\Facades\Log;
 
 class OutageController extends Controller
@@ -23,15 +24,10 @@ class OutageController extends Controller
         $date = Carbon::parse(request('date')) ?: today();
         $location = request()->location ?: '';
 
-        $locations = Outage::select('location')->distinct()->orderBy('location')->get();
-
+        $locations = \DB::table('locations')->select('name')->get()->toArray();
         $plannedOutages = Outage::for($location)->betweenDates($date)->get();
 
-        return view('outages.index', [
-            'outages' => $plannedOutages,
-            'date' => date_format($date, 'Y-m-d'),
-            'locations' => $locations
-        ]);
+        return view('outages.index', compact('date', 'locations', 'plannedOutages'));
     }
 
     /**
@@ -40,6 +36,7 @@ class OutageController extends Controller
      */
     public function importFile()
     {
+        $locations = '';
         try {
             $locations = (new DownloadOutagesDocument())->handle();
         } catch (\Exception $e) {

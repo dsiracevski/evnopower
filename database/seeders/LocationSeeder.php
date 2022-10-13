@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Location;
 use Illuminate\Database\Seeder;
 
 class LocationSeeder extends Seeder
@@ -36,7 +37,7 @@ class LocationSeeder extends Seeder
             ],
             [
                 'location' => 'Кавадарци',
-                'cec_number' =>
+                'cec_number' => 69
             ],
             [
                 'location' => 'Кичево',
@@ -91,5 +92,9 @@ class LocationSeeder extends Seeder
                 'cec_number' => 69
             ]
         ];
+
+        foreach ($cecLocations as $location) {
+            Location::factory()->create(['name' => $location['location'], 'cec_number' => $location['cec_number']]);
+        }
     }
 }
