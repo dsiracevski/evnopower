@@ -25,8 +25,8 @@ class PlannedOutages extends Mailable
     {
         $this->outages = $userOutages->whereIn('location', $user->locations()->pluck('name'));
         $this->user = $user;
-        // Add them to the list{
-            $this->user->outages()->attach($userOutages);
+
+        $this->user->outages()->attach($this->outages);
     }
 
     /**
