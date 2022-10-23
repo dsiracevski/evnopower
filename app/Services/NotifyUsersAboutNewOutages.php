@@ -21,6 +21,8 @@ class NotifyUsersAboutNewOutages
                 return;
             }
 
+//            new UsersWithLocationsArray()->getAllUsersByUniqueLocation()->filterByPlannedOutages()->each( Mail::to($user)->send(new PlannedOutages($plannedOutages, $user) )
+
             $uLocations = $user->locations()->pluck('name');
 
             $plannedOutages = array_intersect_key($plannedOutages->toArray(), $uLocations->toArray());
