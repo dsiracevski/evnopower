@@ -11,7 +11,7 @@
 <body>
 
 
-    <div class="lg:px-24 px-6 md:py-8 p-4 mx-auto min-h-screen bg-white">
+    <div class="lg:px-24 px-6 md:py-5 p-4 mx-auto min-h-screen bg-white">
 
         {{$slot}}
 

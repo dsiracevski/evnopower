@@ -46,7 +46,7 @@ class LiveTable extends Component
             ->whereIn('location', $locations)
             ->betweenDates($date)
             ->orderBy($this->sortBy)
-            ->paginate(8);
+            ->paginate(10);
         
         return view('livewire.live-table', compact('date', 'outages', 'locations'));
     }

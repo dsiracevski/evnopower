@@ -5,36 +5,6 @@
                         class="text-amber-500">{{date('Y-m-d', strtotime($date))}}</span>
             </a>
         </h1>
-
-        <div class="md:flex flex-row md:w-auto w-full text-sm md:space-x-3 md:space-y-0 space-y-4 shadow-lg p-2 rounded-lg items-center border-2 border-blue-50">
-
-            <div class="flex space-x-1 place-content-around md:text-sm text-xs">
-                <div class="bg-white py-1 px-1 rounded-lg border-2 border-green-400 text-center">
-                    <a href="{{route('notification.choose-locations')}}">{{__('Notifications')}}</a>
-                </div>
-
-                @auth()
-                    <div class="bg-white py-1 px-3 rounded-lg border-2 border-blue-400 text-center">
-                        <a href="{{route('outage.index', ['user_id' => Auth::id()])}}">{{__('Personal')}}</a>
-                    </div>
-                    <form action="{{route('logout')}}" method="POST">
-                        @csrf
-                        @method('POST')
-                        <div>
-                            <button class="bg-white py-1 px-3 rounded-lg border-2 border-red-400 text-center">
-                                {{__('Log out')}}
-                            </button>
-                        </div>
-                    </form>
-                @endauth
-
-                @guest()
-                    <div class="bg-white py-1 px-3 rounded-lg border-2 border-blue-400 text-center">
-                        <a href="{{route('login')}}">{{__('Log in')}}</a>
-                    </div>
-                @endguest
-            </div>
-        </div>
     </div>
 
     <livewire:live-table/>
