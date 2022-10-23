@@ -14,15 +14,13 @@ class SendPlannedOutagesMail implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
 
-    public $data;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct(private $data)
     {
-        $this->data = $data;
     }
 
     /**

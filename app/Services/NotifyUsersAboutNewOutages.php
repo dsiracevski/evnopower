@@ -17,7 +17,9 @@ class NotifyUsersAboutNewOutages
 
             $plannedOutages = Outage::upcomingOutages()->pluck('location');
 
-            if (! $plannedOutages) return;
+            if ($plannedOutages->isEmpty()) {
+                return;
+            }
 
             $uLocations = $user->locations()->pluck('name');
 

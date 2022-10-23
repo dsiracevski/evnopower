@@ -5,15 +5,16 @@ namespace App\View\Components;
 use App\Models\Outage;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\Component;
 
 class MobileTable extends Component
 {
     /**
-     * @param  Collection|Outage[]  $outages
+     * @param  Collection|LengthAwarePaginator|Outage[]  $outages
      */
     public function __construct(
-        public Collection|array $outages
+        public Collection|LengthAwarePaginator|array $outages
     ) {
     }
 

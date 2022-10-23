@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Outage;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class OutageService
@@ -14,9 +15,9 @@ class OutageService
     }
 
     /**
-     * @return Outage|Collection
+     * @return Outage|Collection|LengthAwarePaginator
      */
-    public function getLocationNames(): Outage|Collection
+    public function getLocationNames(): Outage|Collection|LengthAwarePaginator
     {
         return $this->outage->select('location')->distinct()->orderBy('location')->get();
     }

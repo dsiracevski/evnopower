@@ -39,17 +39,6 @@ class Outage extends Model
         });
     }
 
-    /**
-     * @param $query
-     * @param $location
-     */
-    public function scopeFor($query, $location): void
-    {
-        $query->when($location ?? false, function ($query, $location) {
-            $query->where('location', 'LIKE', '%'.$location.'%');
-        });
-    }
-
     public function scopeUpcomingOutages()
     {
         return $this->where('start', '>=', now()->toDateTimeString());

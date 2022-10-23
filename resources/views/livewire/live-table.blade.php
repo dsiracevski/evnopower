@@ -1,47 +1,55 @@
-<div {{ $attributes->class(['hidden md:block space-y-4']) }}>
+<div class="hidden md:block space-y-4">
+    <div class="grid grid-cols-12">
+        <div wire:model="search" class="col-span-3">
+            <label class="font-semibold tracking-wide">{{__('Search by city')}}:
+                <input type="text" class="border-5 border-amber-400 rounded-xl">
+            </label>
+        </div>
+        <div wire:model="date" class="col-span-3">
+            <label for="date" class="font-semibold tracking-wide">{{__('Search by date')}}:
+                <input value="{{$date}}" id="date" name="date" class="border-5 border-amber-400 rounded-xl" type="date">
+            </label>
+        </div>
+    </div>
     <div class="grid grid-cols-12 gap-4 border-2 bg-amber-300 rounded-lg border-blue-50">
         <div class="text-base col-span-1 col-span-1 py-4 px-2 rounded-lg font-semibold tracking-wide text-left">
-
-            <x-filter-form>
-                <input type="hidden" value="start" name="filter">
-                <button type="submit">Од:</button>
-            </x-filter-form>
+            <div sortable wire:click="sortBy('start')">
+                <button type="submit">{{__('From')}}:</button>
+            </div>
         </div>
 
         <div class="text-base col-span-1 py-4 px-2 rounded-lg font-semibold tracking-wide text-left">
-            <x-filter-form>
-                <input type="hidden" value="end" name="filter">
+            <div sortable wire:click="sortBy('end')">
                 <button type="submit">
-                    До:
+                    {{__('To')}}:
                 </button>
-            </x-filter-form>
+            </div>
         </div>
 
         <div class="text-base col-span-1 py-4 px-2 rounded-lg font-semibold tracking-wide text-left">
-            <x-filter-form>
-                <input type="hidden" value="cec_number" name="filter">
+            <div sortable wire:click="sortBy('cec_number')">
                 <button type="submit">
-                    КЕЦ:
+                    {{__('CEC')}}:
                 </button>
-            </x-filter-form>
+            </div>
         </div>
 
         <div class="text-base col-span-1 py-4 px-2 rounded-lg font-semibold tracking-wide text-left">
-            <x-filter-form>
-                <input type="hidden" value="location" name="filter">
+            <div sortable wire:click="sortBy('location')">
                 <button type="submit">
-                    Локација:
+                    {{__('Location')}}:
                 </button>
-            </x-filter-form>
+            </div>
         </div>
 
         <div class="text-base col-span-8 py-4 px-2 rounded-lg font-semibold tracking-wide text-left">
-            Адреса:
+            {{__('Address')}}:
         </div>
     </div>
 
     @foreach($outages as $outage)
-        <div class="grid grid-cols-12 rounded-lg shadow-lg hover:bg-amber-300 hover:text-lg odd:bg-gray-100 even:bg-white border-2 border-blue-50">
+        <div wire:key="{{$outage->id}}"
+             class="grid grid-cols-12 rounded-lg shadow-lg hover:bg-amber-300 hover:text-lg odd:bg-gray-100 even:bg-white border-2 border-blue-50">
             <div class="p-2 col-span-1 my-2 text-sm hover:font-bold hover:text-gray-900 text-gray-600 text-left">{{date('H:i:s', strtotime($outage->start))}}</div>
             <div class="p-2 col-span-1 my-2 text-sm hover:font-bold hover:text-gray-900 text-gray-600 text-left">{{date('H:i:s', strtotime($outage->end))}}</div>
             <div class="p-2 col-span-1 my-2 text-sm hover:font-bold hover:text-gray-900 text-gray-600 text-left">{{$outage->cec_number}}</div>
@@ -50,7 +58,6 @@
         </div>
     @endforeach
 
-    <div>
-        {{$outages->links()}}
-    </div>
+    {{$outages->links()}}
+
 </div>
