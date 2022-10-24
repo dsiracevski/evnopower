@@ -28,7 +28,7 @@ class Outage extends Model
      * @param $date
      * @return mixed
      */
-    public function scopeBetweenDates($query, $date): mixed
+    public function scopeWithinDate($query, $date): mixed
     {
         $startDate = Carbon::parse($date)->subDay()->endOfDay();
         $endDate = Carbon::parse($date)->endOfDay();
@@ -43,11 +43,16 @@ class Outage extends Model
      * @param $query
      * @param $location
      */
-    public function scopeFor($query, $location): void
+    public function scopeForLocation($query, $location): void
     {
         $query->when($location ?? false, function ($query, $location) {
             $query->where('location', 'LIKE', '%'.$location.'%');
         });
+    }
+
+    public function scopeLocationNames($query)
+    {
+        return $query->distinct('location');
     }
 
     public function scopeUpcomingOutages()

@@ -15,6 +15,7 @@ class SendPlannedOutagesMail implements ShouldQueue
 
 
     public $data;
+
     /**
      * Create a new job instance.
      *

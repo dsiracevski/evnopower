@@ -9,7 +9,6 @@
         <div class="md:flex flex-row md:w-auto w-full text-sm md:space-x-3 md:space-y-0 space-y-4 shadow-lg p-2 rounded-lg items-center border-2 border-blue-50">
             <form action="{{route('outage.index')}}" method="GET">
                 @csrf
-
                 <label for="date" class="bg-amber-300 py-1 px-3 rounded-lg border-2 border-amber-400">Дата:</label>
                 <input value="{{$date}}" id="date" name="date" class="border-2 border-amber-400 rounded-lg p-1 text-sm"
                        onchange="this.form.submit()" type="date">
@@ -18,7 +17,7 @@
                         class="border-2 border-amber-400 bg-white rounded-lg p-1 text-sm">
                     <option value="">сите локации</option>
                     @foreach($locations as $location)
-                        <option {{(request()->get('location') === $location->name) ? 'selected' : ''}} value="{{$location->name}}">{{$location->name}}</option>
+                        <option {{(request()->get('location') === $location['name']) ? 'selected' : ''}} value="{{$location['name']}}">{{$location['name']}}</option>
                     @endforeach
                 </select>
             </form>

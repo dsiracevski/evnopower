@@ -31,7 +31,7 @@ class DownloadOutagesDocument
         $import = Excel::import($import, $fileName, 'public', \Maatwebsite\Excel\Excel::XLSX)
             ->toArray($import, $fileName, 'public');
 
-        return array_unique(array_column($import[0], 2));
+        return array_column($import, 3); // TODO inspect this
     }
 
     /**

@@ -9,26 +9,29 @@ use Illuminate\Support\Facades\Mail;
 
 class NotifyUsersAboutNewOutages
 {
+    public function __construct(private OutageService $outageService)
+    {
+
+    }
     public function handle()
     {
-        $usersWithLocations = User::has('locations')->with('locations')->get();
+        $subscribedUsers = User::has('locations')->with('locations')->get();
 
-        foreach ($usersWithLocations as $user) {
+        foreach ($subscribedUsers as $subscribedUser) {
 
-            $plannedOutages = Outage::upcomingOutages()->pluck('location');
+            $powerOutageLocations = Outage::upcomingOutages()->pluck('location');
 
-            if (! $plannedOutages) return;
+            if ($powerOutageLocations->isEmpty()) {
+                return;
+            }
 
-            $uLocations = $user->locations()->pluck('name');
+            $monitoredLocations = $subscribedUser->locations()->pluck('name');
 
-            $plannedOutages = array_intersect_key($plannedOutages->toArray(), $uLocations->toArray());
+            $powerOutageLocations = array_intersect_key($powerOutageLocations->toArray(), $monitoredLocations->toArray());
 
-            $plannedOutages = Outage::whereIn('location', $plannedOutages)
-                ->whereDate('start', '>', now()->toDateTimeString())
-                ->whereDoesntHave('users')
-                ->get();
+            $plannedPowerOutages = $this->outageService->getUpcomingPowerOutagesFor($powerOutageLocations);
 
-            Mail::to($user)->send(new PlannedOutages($plannedOutages, $user));
+            Mail::to($subscribedUser)->send(new PlannedOutages($plannedPowerOutages, $subscribedUser));
         }
     }
 }

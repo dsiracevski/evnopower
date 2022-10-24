@@ -27,5 +27,4 @@ class Location extends Model
                 ->where('outages.start', '>=', now());
         });
     }
-
 }
