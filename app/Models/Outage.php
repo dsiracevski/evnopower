@@ -53,4 +53,11 @@ class Outage extends Model
         return (!$this->users->contains($user));
     }
 
+    public function getStatusColorAttribute(): string
+    {
+        if ($this->end < now()) return 'grey';
+        if ($this->start < now() && $this->end > now()) return 'yellow';
+        if ($this->end > now()) return 'red';
+    }
+
 }

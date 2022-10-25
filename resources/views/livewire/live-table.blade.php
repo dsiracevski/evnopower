@@ -16,31 +16,28 @@
             </label>
         </div>
 
-        <div class="flex col-span-6 place-content-around md:text-sm text-xs">
-            <div class="px-4 py-2 my-auto bg-amber-200 rounded-xl border-2 border-amber-500 font-semibold tracking-wide">
+        <div class="flex col-span-6 place-content-end space-x-3 md:text-sm text-xs">
+            <x-button>
                 <a href="{{route('notification.choose-locations')}}">{{__('Notifications')}}</a>
-            </div>
+            </x-button>
+
+            @guest()
+                <x-button>
+                    <a href="{{route('login')}}">{{__('Log In')}}</a>
+                </x-button>
+            @endguest
 
             @auth()
-                <div class="px-4 py-2 my-auto bg-amber-200 rounded-xl border-2 border-amber-500 font-semibold tracking-wide">
-                    <a href="{{route('outage.index', ['user_id' => Auth::id()])}}">{{__('Personal')}}</a>
-                </div>
                 <form action="{{route('logout')}}" method="POST">
                     @csrf
                     @method('POST')
                     <div>
-                        <button class="px-4 py-2 my-auto bg-amber-200 rounded-xl border-2 border-amber-500 font-semibold tracking-wide">
-                            {{__('Log out')}}
-                        </button>
+                        <x-button style="padding-top: 12px; padding-bottom: 12px">
+                            {{__('Log Out')}}
+                        </x-button>
                     </div>
                 </form>
             @endauth
-
-            @guest()
-                <div class="px-4 py-2 my-auto bg-amber-200 rounded-xl border-2 border-amber-500 font-semibold tracking-wide">
-                    <a href="{{route('login')}}">{{__('Log in')}}</a>
-                </div>
-            @endguest
         </div>
     </div>
     <div class="grid grid-cols-12 gap-4 border-2 bg-amber-300 rounded-lg border-blue-50">
@@ -80,8 +77,7 @@
     </div>
 
     @foreach($outages as $outage)
-        <div wire:key="{{$outage->id}}"
-             class="grid grid-cols-12 rounded-lg shadow-lg hover:bg-amber-300 hover:text-lg odd:bg-gray-100 even:bg-white border-2 border-blue-50">
+        <div class="grid grid-cols-12 rounded-lg shadow-lg hover:bg-amber-300 hover:text-lg odd:bg-gray-100 even:bg-white border-2 border-blue-50">
             <div class="p-2 col-span-1 my-2 text-sm hover:font-bold hover:text-gray-900 text-gray-600 text-left">{{date('H:i:s', strtotime($outage->start))}}</div>
             <div class="p-2 col-span-1 my-2 text-sm hover:font-bold hover:text-gray-900 text-gray-600 text-left">{{date('H:i:s', strtotime($outage->end))}}</div>
             <div class="p-2 col-span-1 my-2 text-sm hover:font-bold hover:text-gray-900 text-gray-600 text-left">{{$outage->cec_number}}</div>
