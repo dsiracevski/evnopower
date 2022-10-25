@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\Outage;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
@@ -29,7 +30,7 @@ class OutageImport implements ToModel, WithStartRow, SkipsEmptyRows
         return $row;
     }
 
-    public function import(array $row): Outage
+    public function import(array $row): Outage|Collection
     {
         return new Outage([
             'start' => Date::excelToDateTimeObject($row[0]),

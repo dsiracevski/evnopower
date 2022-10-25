@@ -3,20 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\SendPlannedOutagesMail;
-use App\Models\Outage;
 use App\Services\DownloadOutagesDocument;
+use App\Services\LocationService;
 use App\Services\OutageService;
 use Carbon\Carbon;
-use Illuminate\Support\Benchmark;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 class OutageController extends Controller
 {
-    protected OutageService $outageService;
-
-    public function __construct(OutageService $outageService)
+    public function __construct(private LocationService $locationService, private OutageService $outageService)
     {
-        $this->outageService = $outageService;
     }
 
     public function index()
@@ -24,26 +21,20 @@ class OutageController extends Controller
         $date = Carbon::parse(request('date')) ?: today();
         $location = request()->location ?: '';
 
-        $locations = \DB::table('locations')->select('name')->get()->toArray();
-        $plannedOutages = Outage::for($location)->betweenDates($date)->get();
+        $plannedOutages = $this->outageService->getUpcomingPowerOutagesForLocationWithinDate($location, $date);
+        $locations = $this->locationService->getLocationNamesForUpcomingPowerOutages($plannedOutages);
 
         return view('outages.index', compact('date', 'locations', 'plannedOutages'));
     }
 
-    /**
-     * Import file for planned outages
-     * @return void
-     */
-    public function importFile()
+    public function importFile(): void
     {
         $locations = '';
         try {
             $locations = (new DownloadOutagesDocument())->handle();
-        } catch (\Exception $e) {
+            SendPlannedOutagesMail::dispatch($locations);
+        } catch (Exception $e) {
             Log::error($e->getMessage());
         }
-
-        // Dispatch job for mail processing
-        SendPlannedOutagesMail::dispatch($locations);
     }
 }
