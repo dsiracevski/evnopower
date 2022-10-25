@@ -7,6 +7,7 @@ use App\Services\DownloadOutagesDocument;
 use App\Services\LocationService;
 use App\Services\OutageService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 class OutageController extends Controller
@@ -26,20 +27,14 @@ class OutageController extends Controller
         return view('outages.index', compact('date', 'locations', 'plannedOutages'));
     }
 
-    /**
-     * Import file for planned outages
-     * @return void
-     */
-    public function importFile()
+    public function importFile(): void
     {
         $locations = '';
         try {
             $locations = (new DownloadOutagesDocument())->handle();
             SendPlannedOutagesMail::dispatch($locations);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error($e->getMessage());
         }
-
-        // Dispatch job for mail processing
     }
 }

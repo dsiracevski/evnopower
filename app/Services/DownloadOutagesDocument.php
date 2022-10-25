@@ -11,15 +11,11 @@ class DownloadOutagesDocument
 {
     protected string $fileUrl;
 
-    /**
-     * @return array
-     */
-    public function handle(): mixed
+    public function handle(): array
     {
         $fileName = $this->getFileName();
         $fileName .= ".xlsx";
 
-        //Check if file has been downloaded yet
         if (Storage::exists("public/$fileName")) {
             Log::info("The file has not been updated yet!");
             abort(404);
@@ -31,7 +27,7 @@ class DownloadOutagesDocument
         $import = Excel::import($import, $fileName, 'public', \Maatwebsite\Excel\Excel::XLSX)
             ->toArray($import, $fileName, 'public');
 
-        return array_column($import, 3); // TODO inspect this
+        return array_column($import, 3);
     }
 
     /**

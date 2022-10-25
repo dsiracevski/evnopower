@@ -5,33 +5,34 @@ namespace App\Services;
 use App\Mail\PlannedOutages;
 use App\Models\Outage;
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
 
 class NotifyUsersAboutNewOutages
 {
-    public function __construct(private OutageService $outageService)
-    {
-
-    }
-    public function handle()
+    public function handle(): void
     {
         $subscribedUsers = User::has('locations')->with('locations')->get();
 
         foreach ($subscribedUsers as $subscribedUser) {
+            $monitoredLocations = $this->monitoredLocationsFor($subscribedUser);
+            $upcomingPowerOutages = $this->upcomingPowerOutagesFor($monitoredLocations);
 
-            $powerOutageLocations = Outage::upcomingOutages()->pluck('location');
+            if ($upcomingPowerOutages->isEmpty()) return;
 
-            if ($powerOutageLocations->isEmpty()) {
-                return;
-            }
-
-            $monitoredLocations = $subscribedUser->locations()->pluck('name');
-
-            $powerOutageLocations = array_intersect_key($powerOutageLocations->toArray(), $monitoredLocations->toArray());
-
-            $plannedPowerOutages = $this->outageService->getUpcomingPowerOutagesFor($powerOutageLocations);
-
-            Mail::to($subscribedUser)->send(new PlannedOutages($plannedPowerOutages, $subscribedUser));
+            Mail::to($subscribedUser)->send(new PlannedOutages($upcomingPowerOutages, $subscribedUser));
         }
+    }
+
+    public function upcomingPowerOutagesFor(Collection $monitoredLocations): Collection
+    {
+        return Outage::upcomingOutages()
+            ->whereIn('location', $monitoredLocations)
+            ->get();
+    }
+
+    public function monitoredLocationsFor($subscribedUser): Collection
+    {
+        return $subscribedUser->locations()->pluck('name');
     }
 }
