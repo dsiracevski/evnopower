@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Location extends Model
 {
@@ -11,15 +12,11 @@ class Location extends Model
 
     protected $guarded = [];
 
-    public function users()
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'location_user')->withTimestamps();
     }
 
-    /**
-     * Get outages for
-     * @param $query
-     */
     public function scopeOutages($query): void
     {
         $query->join('outages', function ($join) {

@@ -10,10 +10,6 @@ class LocationService
     {
     }
 
-    /**
-     * @param $plannedOutages
-     * @return array
-     */
     public function getLocationNamesForUpcomingPowerOutages($plannedOutages): array
     {
         return $this->location->whereIn('name', $plannedOutages->pluck('location'))->select('name')->get()->toArray();
