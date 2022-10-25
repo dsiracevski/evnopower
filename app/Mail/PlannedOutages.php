@@ -2,26 +2,21 @@
 
 namespace App\Mail;
 
-use App\Models\Outage;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
 
 class PlannedOutages extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $outages;
+    public Collection $outages;
 
-    public $user;
+    public User $user;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
-    public function __construct($userOutages, $user)
+    public function __construct($userOutages, User $user)
     {
         $this->outages = $userOutages->whereIn('location', $user->locations()->pluck('name'));
         $this->user = $user;
@@ -29,12 +24,7 @@ class PlannedOutages extends Mailable
         $this->user->outages()->attach($this->outages);
     }
 
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
-    public function build()
+    public function build(): PlannedOutages
     {
         return $this->markdown('emails.upcoming-outages');
     }

@@ -15,20 +15,12 @@ class Outage extends Model
 
     protected $dates = ['start', 'end', 'created_at', 'updated_at'];
 
-    protected $currentDate;
-
-
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_outages')->withTimestamps();
     }
 
-    /**
-     * @param $query
-     * @param $date
-     * @return mixed
-     */
-    public function scopeBetweenDates($query, $date): mixed
+    public function scopeWithinDate($query, $date): mixed
     {
         $startDate = Carbon::parse($date)->subDay()->endOfDay();
         $endDate = Carbon::parse($date)->endOfDay();
@@ -39,18 +31,26 @@ class Outage extends Model
         });
     }
 
+    public function scopeForLocation($query, string $location): void
+    {
+        $query->when($location ?? false, function ($query, $location) {
+            $query->where('location', 'LIKE', '%'.$location.'%');
+        });
+    }
+
+    public function scopeLocationNames($query)
+    {
+        return $query->distinct('location');
+    }
+
     public function scopeUpcomingOutages()
     {
         return $this->where('start', '>=', now()->toDateTimeString());
     }
 
-    /**
-     * @param $user
-     * @return bool
-     */
     public function notSentToUser($user): bool
     {
-        return (!$this->users->contains($user)); // Check if there are any planned outages the user hasn't received a notification for yet
+        return (!$this->users->contains($user));
     }
 
 }
