@@ -57,6 +57,7 @@
     "extra": {
         "laravel": {
             "dont-discover": [
+                "TelescopeServiceProvider"
             ]
         }
     },
