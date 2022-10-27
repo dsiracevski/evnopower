@@ -1,8 +1,8 @@
 <x-layout>
     <div class="flex flex-col items-center space-y-3 justify-center mb-3">
-        <span class="md:text-2xl text-lg text-center text-blue-500 font-semibold rounded-lg shadow-lg py-2 px-4 hover:bg-blue-300">
-            SOMETHING WITTY
-        </span>
+        <button class="md:text-3xl text-lg text-center text-blue-500 font-bold rounded-lg shadow-lg py-2 px-4">
+            EV<span class="text-red-500 font-bolder tracking-wide ">No</span>Power
+        </button>
     </div>
 
     <livewire:live-table/>

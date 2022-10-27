@@ -18,7 +18,7 @@ class NotifyUsersAboutNewOutages
             $monitoredLocations = $this->monitoredLocationsFor($subscribedUser);
             $upcomingPowerOutages = $this->upcomingPowerOutagesFor($monitoredLocations);
 
-            if ($upcomingPowerOutages->isEmpty()) return;
+            if ($upcomingPowerOutages->isEmpty()) continue;
 
             Mail::to($subscribedUser)->send(new PlannedOutages($upcomingPowerOutages, $subscribedUser));
         }

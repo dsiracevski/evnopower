@@ -55,7 +55,7 @@ class Outage extends Model
 
     public function getStatusColorAttribute(): string
     {
-        if ($this->end < now()) return 'grey';
+        if ($this->end < now()) return 'green';
         if ($this->start < now() && $this->end > now()) return 'yellow';
         if ($this->end > now()) return 'red';
     }
