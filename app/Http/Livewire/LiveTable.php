@@ -2,29 +2,53 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Outage;
-use App\Services\OutageService;
-use Carbon\Carbon;
+use App\Models\Location;
 use DB;
+use Carbon\Carbon;
+use App\Models\Outage;
 use Livewire\Component;
+use Illuminate\View\View;
 use Livewire\WithPagination;
+use App\Services\OutageService;
+use Illuminate\Contracts\Foundation\Application;
 
 class LiveTable extends Component
 {
     use WithPagination;
 
-    public $sortBy = 'start';
-    public $location = [];
-    public $search = '';
-    public $date = '';
     public int $userId;
-
+    public string $date = '';
+    public string $location = '';
+    public array $locations = [];
+    public string $sortBy = 'start';
+    public array $searchLocations = [];
 
     private $outageService;
 
     public function mount(OutageService $outageService): void
     {
-        $this->outageService = $outageService;
+        $this->fill([
+            'outageService' => $outageService,
+            'date' => Carbon::parse($this->date) ?: today()
+        ]);
+    }
+
+    public function updatedLocation()
+    {
+        $this->searchLocations = Location::where('name', 'like', '%'.$this->location.'%')
+            ->pluck('name')
+            ->toArray();
+    }
+
+    public function render(): View|Application
+    {
+        $outages = Outage::forLocation($this->location)
+            ->forDate($this->date)
+            ->whereIn('location', $this->userLocations())
+            ->orderBy($this->sortBy)
+            ->paginate(9);
+
+        return view('livewire.live-table', compact('outages'));
     }
 
     public function sortBy($column): void
@@ -32,18 +56,8 @@ class LiveTable extends Component
         $this->sortBy = $column;
     }
 
-    public function render()
+    public function userLocations(): array
     {
-
-        $date = Carbon::parse($this->date) ?: today();
-        $locations = $this->location ?: DB::table('locations')->pluck('name')->toArray();
-
-        $outages = Outage::where('location', 'like', '%'.$this->search.'%')
-            ->withinDate($date)
-            ->whereIn('location', $locations)
-            ->orderBy($this->sortBy)
-            ->paginate(9);
-        
-        return view('livewire.live-table', compact('date', 'outages', 'locations'));
+        return $this->locations ?: DB::table('locations')->pluck('name')->toArray();
     }
 }

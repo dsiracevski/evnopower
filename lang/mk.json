@@ -1,6 +1,8 @@
 {
-  "Search by date": "Пребарај по дата",
+  "Search by date": "Пребарај по датум",
   "Search by city": "Пребарај по град",
+  "Search by location": "Пребарај по локација",
+  "Enter location": "Внесете локација",
   "From": "Од",
   "To": "До",
   "CEC": "КЕЦ",
@@ -11,5 +13,9 @@
   "Log In": "Логирај се",
   "Planned outages for": "Планирани прекини на струја за",
   "Log Out": "Одлогирај се",
-  "All": "Сите"
+  "All": "Сите",
+  "Choose one or more locations": "Изберете една или повеќе локации:",
+  "Enter e-mail for notifications:": "Внесете e-mail за нотификации:",
+  "Submit": "Прати",
+  "Back": "Назад"
 }

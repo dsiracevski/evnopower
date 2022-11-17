@@ -20,7 +20,7 @@ class Outage extends Model
         return $this->belongsToMany(User::class, 'user_outages')->withTimestamps();
     }
 
-    public function scopeWithinDate($query, $date): mixed
+    public function scopeForDate($query, $date): mixed
     {
         $startDate = Carbon::parse($date)->subDay()->endOfDay();
         $endDate = Carbon::parse($date)->endOfDay();
@@ -33,9 +33,14 @@ class Outage extends Model
 
     public function scopeForLocation($query, string $location): void
     {
-        $query->when($location ?? false, function ($query, $location) {
+        $query->when($location, function ($query, $location) {
             $query->where('location', 'LIKE', '%'.$location.'%');
         });
+    }
+
+    public function scopeForLocationWithinDate($query, string $location, $date)
+    {
+        return $query->forLocation($location)->withinDate($date);
     }
 
     public function scopeLocationNames($query)

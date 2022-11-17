@@ -12,7 +12,7 @@
 
         @guest()
             <div class="py-3 px-4 my-4 shadow-xl rounded-lg border-2 border-blue-50 md:space-y-0 space-y-2">
-                <label for="email">Внесете e-mail за нотификации: </label>
+                <label for="email">{{__('Enter e-mail for notifications:')}}</label>
 
                 <input id="email" type="email" value="" name="email"
                        class="px-2 border-2 border-blue-300 rounded-lg"
@@ -28,9 +28,9 @@
             <input type="email" value="{{auth()->user()->email}}" name="email" hidden>
         @endauth
 
-        <div class="space-y-3 py-3 px-4 my-4 shadow-xl rounded-lg border-2 border-blue-50">
-            <div class="my-3 ">
-                <span>Изберете една или повеќе локации:</span>
+        <div class="md:block space-y-2 bg-slate-300 rounded-lg p-5">
+            <div class="my-3 font-semibold tracking-wide">
+                <span>{{__('Choose one or more locations')}}</span>
             </div>
 
             <div class="py-2 px-4">
@@ -57,11 +57,11 @@
                     <div class="flex space-x-3">
 
                         <div class="py-1 px-4 w-max my-4 shadow-xl rounded-xl bg-blue-500">
-                            <button type="submit" class="text-white">Прати</button>
+                            <button type="submit" class="text-white">{{__('Submit')}}</button>
                         </div>
 
                         <div class="py-1 px-4 w-max my-4 shadow-xl rounded-xl bg-red-500">
-                            <a href="{{route('outage.index')}}" class="text-white">Назад</a>
+                            <a href="{{route('outage.index')}}" class="text-white">{{__('Back')}}</a>
                         </div>
                     </div>
             </div>

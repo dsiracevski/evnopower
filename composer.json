@@ -15,7 +15,8 @@
         "maatwebsite/excel": "^3.1",
         "opcodesio/log-viewer": "^1.6",
         "phpoffice/phpspreadsheet": "^1.24",
-        "psr/simple-cache": "2.0"
+        "psr/simple-cache": "2.0",
+        "wireui/wireui": "^1.17"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.7",

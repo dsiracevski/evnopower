@@ -6,6 +6,8 @@
     <title>EVNoPower</title>
     @vite('resources/css/app.css')
     @livewireStyles
+    <wireui:scripts />
+    <script src="//unpkg.com/alpinejs" defer></script>
 </head>
 
 <body>
@@ -19,5 +21,6 @@
 
 
     @livewireScripts
+
 </body>
 </html>

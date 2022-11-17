@@ -1,15 +1,24 @@
-{{--<div class="md:flex flex-row md:w-auto w-full text-sm md:space-x-3 md:space-y-0 space-y-4 shadow-lg p-2 rounded-lg items-center border-2 border-blue-50">--}}
-
-
-{{--</div>--}}
-
 <div class="hidden md:block space-y-2 bg-slate-300 rounded-lg p-5">
     <div class="grid grid-cols-12">
-        <div wire:model="search" class="col-span-3">
-            <label class="font-semibold tracking-wide">{{__('Search by city')}}:
-                <input type="text" class="border-5 border-amber-400 rounded-xl">
-            </label>
+        <div wire:model.debounce.300ms="location" class="col-span-2 mr-1">
+            <div class="relative">
+                <x-input icon="location-marker" placeholder="{{__('Search by location')}}"
+                         type="search"
+                         class="border-5 border-amber-400 rounded-xl font-semibold tracking-wide"/>
+            </div>
+            <div class="absolute mt-2 z-50">
+                @if(strlen($location) > 2)
+                    <ul class="flex flex-row border-4 border-white bg-amber-300 rounded-lg border-blue-100 divide-y">
+                        @forelse($searchLocations as $searchLocation)
+                            <li class="flex-1 items-center px-2 py-2 transition ease-in-out duration-150">{{$searchLocation}}</li>
+                        @empty
+                            <li class="font-semibold tracking-wide px-2 py-2">{{__('No results found for')}} "{{$location}}"</li>
+                        @endforelse
+                    </ul>
+                @endif
+            </div>
         </div>
+
         <div wire:model="date" class="col-span-3">
             <label for="date" class="font-semibold tracking-wide">{{__('Search by date')}}:
                 <input value="{{$date}}" id="date" name="date" class="border-5 border-amber-500 rounded-xl" type="date">
@@ -17,26 +26,14 @@
         </div>
 
         <div class="flex col-span-6 place-content-end space-x-3 md:text-sm text-xs">
-            <x-button>
-                <a href="{{route('notification.choose-locations')}}">{{__('Notifications')}}</a>
-            </x-button>
-
+            <x-button teal label="{{__('Notifications')}}" href="{{route('notification.choose-locations')}}"/>
             @guest()
-                <x-button>
-                    <a href="{{route('login')}}">{{__('Log In')}}</a>
-                </x-button>
+                <x-button teal label="{{__('Log In')}}" href="{{route('login')}}"/>
             @endguest
 
             @auth()
-                <form action="{{route('logout')}}" method="POST">
-                    @csrf
-                    @method('POST')
-                    <div>
-                        <x-button style="padding-top: 12px; padding-bottom: 12px">
-                            {{__('Log Out')}}
-                        </x-button>
-                    </div>
-                </form>
+
+                <x-button negative label="{{__('Log Out')}}" href="{{route('logout')}}"/>
             @endauth
         </div>
     </div>

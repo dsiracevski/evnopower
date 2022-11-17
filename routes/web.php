@@ -4,6 +4,7 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OutageController;
 use App\Http\Livewire\LiveTable;
+use App\Http\Livewire\Statistics;
 use Illuminate\Support\Facades\Route;
 
 
@@ -13,5 +14,6 @@ Route::post('/notifications', [NotificationController::class, 'setLocations'])->
 Route::get('/get', [OutageController::class, 'importFile'])->name('outage.import-file');
 Route::get('/', [OutageController::class, 'index'])->name('outage.index');
 Route::get('/li', [LiveTable::class, 'render'])->name('live-table.index.index');
+Route::get('/stats', [Statistics::class, 'render'])->name('statistics.index');
 
 require __DIR__.'/auth.php';

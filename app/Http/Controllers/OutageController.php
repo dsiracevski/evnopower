@@ -2,15 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\SendPlannedOutagesMail;
-use App\Models\Outage;
-use App\Services\DownloadOutagesDocument;
-use App\Services\LocationService;
-use App\Services\OutageService;
-use Carbon\Carbon;
-use DB;
 use Exception;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use App\Jobs\SendPlannedOutagesMail;
+use App\Services\DownloadOutagesDocument;
 
 class OutageController extends Controller
 {
