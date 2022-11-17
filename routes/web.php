@@ -11,5 +11,6 @@ Route::get('/notifications', [NotificationController::class, 'chooseLocations'])
 Route::post('/notifications', [NotificationController::class, 'setLocations'])->name('notification.set-locations');
 Route::get('/get', [OutageController::class, 'importFile'])->name('outage.import-file');
 Route::get('/', [OutageController::class, 'index'])->name('outage.index');
+Route::get('/statistics', [\App\Http\Controllers\StatisticsController::class, 'index'])->name('statistics.index');
 
 require __DIR__.'/auth.php';
