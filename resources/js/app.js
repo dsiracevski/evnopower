@@ -37,3 +37,28 @@ app.component('example-component', ExampleComponent);
  */
 
 app.mount('#app');
+
+import Chart from "chart.js/auto";
+
+console.log('1212');
+
+let data = {
+    labels: ['one', 'two', 'three'],
+    datasets: [{
+        label: 'Ehhhhhhh',
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgb(255, 99, 132)',
+        data: [1, 2, 3],
+    }]
+};
+
+let config = {
+    type: 'line',
+    data: data,
+    options: {}
+};
+
+let myChart = new Chart(
+    document.getElementById('outageChart'),
+    config
+);
