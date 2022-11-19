@@ -5,6 +5,7 @@
         "This file is @generated automatically"
     ],
     "content-hash": "effab1d9ec1f6cb8d2be122ef6979424",
+
     "packages": [
         {
             "name": "brick/math",
@@ -1142,7 +1143,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2022-11-08T14:47:39+00:00"
+            "time": "2022-11-08T14:47:39+00:00":46+00:00"
         },
         {
             "name": "laravel/sanctum",
