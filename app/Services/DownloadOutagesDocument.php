@@ -4,8 +4,9 @@ namespace App\Services;
 
 use App\Imports\OutageImport;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
+use App\Jobs\SendPlannedOutagesMail;
 
 class DownloadOutagesDocument
 {
@@ -26,6 +27,9 @@ class DownloadOutagesDocument
         $import = new OutageImport;
         $import = Excel::import($import, $fileName, 'public', \Maatwebsite\Excel\Excel::XLSX)
             ->toArray($import, $fileName, 'public');
+
+//        $locations = array_column($import, 3);
+//        SendPlannedOutagesMail::dispatch($locations);
 
         return array_column($import, 3);
     }

@@ -2,29 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use App\Jobs\SendPlannedOutagesMail;
 use App\Services\DownloadOutagesDocument;
-use App\Services\LocationService;
-use App\Services\OutageService;
-use Carbon\Carbon;
-use Exception;
-use Illuminate\Support\Facades\Log;
 
 class OutageController extends Controller
 {
-    public function __construct(private LocationService $locationService, private OutageService $outageService)
-    {
-    }
-
     public function index()
     {
         $date = Carbon::parse(request('date')) ?: today();
-        $location = request()->location ?: '';
 
-        $plannedOutages = $this->outageService->getUpcomingPowerOutagesForLocationWithinDate($location, $date);
-        $locations = $this->locationService->getLocationNamesForUpcomingPowerOutages($plannedOutages);
-
-        return view('outages.index', compact('date', 'locations', 'plannedOutages'));
+        return view('outages.index', compact('date'));
     }
 
     public function importFile(): void

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Outage;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class OutageService

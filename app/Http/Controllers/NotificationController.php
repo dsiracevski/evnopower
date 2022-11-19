@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Location;
-use App\Models\User;
 use Exception;
+use App\Models\User;
+use App\Models\Location;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 class NotificationController extends Controller
 
 {
     public function chooseLocations()
     {
-        $userLocations = (Auth::check()) ? auth()->user()->locations()->pluck('locations.id')->toArray() : [];
+//        $userLocations = (Auth::check()) ? auth()->user()->locations()->pluck('locations.id')->toArray() : [];
 
         return view('notifications.choose-locations', [
-            'locations' => Location::all(),
-            'userLocations' => $userLocations
+//            'locations' => Location::all(),
+//            'userLocations' => $userLocations
         ]);
     }
 

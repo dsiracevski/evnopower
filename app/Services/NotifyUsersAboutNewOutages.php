@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Mail\PlannedOutages;
-use App\Models\Outage;
 use App\Models\User;
+use App\Models\Outage;
+use App\Mail\PlannedOutages;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
 
@@ -18,7 +18,7 @@ class NotifyUsersAboutNewOutages
             $monitoredLocations = $this->monitoredLocationsFor($subscribedUser);
             $upcomingPowerOutages = $this->upcomingPowerOutagesFor($monitoredLocations);
 
-            if ($upcomingPowerOutages->isEmpty()) return;
+            if ($upcomingPowerOutages->isEmpty()) continue;
 
             Mail::to($subscribedUser)->send(new PlannedOutages($upcomingPowerOutages, $subscribedUser));
         }

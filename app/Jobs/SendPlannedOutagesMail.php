@@ -2,12 +2,12 @@
 
 namespace App\Jobs;
 
-use App\Services\NotifyUsersAboutNewOutages;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Services\NotifyUsersAboutNewOutages;
 
 class SendPlannedOutagesMail implements ShouldQueue
 {
